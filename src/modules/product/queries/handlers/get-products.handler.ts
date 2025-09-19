@@ -8,23 +8,30 @@ export class GetProductsHandler implements IQueryHandler<GetProductsQuery> {
     async execute(query: GetProductsQuery) {
         const { page, limit, description, name, price } = query.data;
         
+        // Build where clause with LIKE filters
+        const whereClause: any = {};
+        
+        if (name) {
+            whereClause.name = { contains: name, mode: 'insensitive' };
+        }
+        
+        if (description) {
+            whereClause.description = { contains: description, mode: 'insensitive' };
+        }
+        
+        if (price) {
+            whereClause.price = price;
+        }
 
         const total = await this.prismaService.product.count({
-            where: {
-                name: name,
-                description: description,
-                price: price
-            }
+            where: whereClause
         });
 
         const products = await this.prismaService.product.findMany({
-            where: {
-                name: name,
-                description: description,
-                price: price
-            },
+            where: whereClause,
             skip: (page - 1) * limit,
-            take: Number(limit)
+            take: Number(limit),
+            orderBy: { createdAt: 'desc' }
         });
 
         return {
