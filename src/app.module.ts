@@ -8,6 +8,7 @@ import { AuthGuard } from './modules/auth/guards/auth.guard';
 import { AuthModule } from './modules/auth/auth.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ProductModule } from './modules/product/product.module';
+import { CartModule } from './modules/cart/cart.module';
 
 @Module({
   controllers: [],
@@ -25,6 +26,7 @@ import { ProductModule } from './modules/product/product.module';
     AuthModule,
     CoreModule,
     ProductModule,
+    CartModule,
     CqrsModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
