@@ -6,6 +6,7 @@ import { validateEnv } from './core/infra/config/env';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './core/guards/roles.guard';
 import { AuthGuard } from './modules/auth/guards/auth.guard';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   controllers: [AppController],
@@ -20,6 +21,7 @@ import { AuthGuard } from './modules/auth/guards/auth.guard';
     }
   ],
   imports: [
+    AuthModule,
     CoreModule,
     ConfigModule.forRoot({
       isGlobal: true,

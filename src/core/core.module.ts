@@ -6,7 +6,7 @@ import { AppConfigService } from "./infra/config/config.service";
 @Module({
   imports: [],
   controllers: [],
-  providers: [PrismaService],
+  providers: [PrismaService, AppConfigService],
   exports: [
     PrismaService,
     AppConfigService

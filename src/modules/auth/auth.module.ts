@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { AppConfigService } from "../../core/infra/config/config.service";
+import { AuthController } from "./auth.controller";
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { AppConfigService } from "../../core/infra/config/config.service";
       inject: [AppConfigService]
     })
   ],
-  controllers: [],
+  controllers: [AuthController],
 })
 export class AuthModule {}
