@@ -15,11 +15,11 @@ import { ProductModule } from './modules/product/product.module';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: RolesGuard
+      useClass: AuthGuard
     },
     {
       provide: APP_GUARD,
-      useClass: AuthGuard
+      useClass: RolesGuard,
     }
   ],
   imports: [
