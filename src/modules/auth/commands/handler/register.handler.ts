@@ -3,8 +3,8 @@ import { PrismaService } from "src/core/infra/database/prisma.service";
 import { RegisterCommand } from "../impl/register.command";
 import { ConflictException } from "@nestjs/common";
 import { hash } from "bcryptjs";
-import { Role } from "generated/prisma";
 import { JwtService } from "@nestjs/jwt";
+import { Role } from "@prisma/client";
 
 @CommandHandler(RegisterCommand)
 export class RegisterHandler implements ICommandHandler<RegisterCommand> {
