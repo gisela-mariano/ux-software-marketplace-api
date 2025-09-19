@@ -5,7 +5,7 @@ declare module 'express' {
     user: {
       sub: string;
       email: string;
-      role: string;
+      role: Role;
     };
   }
 }
