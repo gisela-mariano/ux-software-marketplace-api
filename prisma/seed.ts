@@ -3,10 +3,10 @@ import { hash } from "bcryptjs"
 
 const prisma = new PrismaClient()
 async function main() {
-  await prisma.user.create({
+  const user = await prisma.user.create({
     data: {
-      name: 'Admin',
-      email: 'admin@admin.com',
+      name: 'John Doe',
+      email: 'john@doe.com',
       password: await hash('123456', 10),
       role: Role.ADMIN
     }

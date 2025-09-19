@@ -36,6 +36,12 @@ export class RegisterHandler implements ICommandHandler<RegisterCommand> {
             }
         });
 
+        await this.prismaService.cart.create({
+            data: {
+                userId: userCreated.id
+            }
+        })
+
         const payload = {
             sub: userCreated.id,
             email: userCreated.email,
