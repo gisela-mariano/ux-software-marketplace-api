@@ -21,18 +21,46 @@ model User {
   password  String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  carts     Cart[]
 
   @@map("users")
 }
 
 model Product {
-  id          String   @id @default(uuid())
+  id          String          @id @default(uuid())
   name        String
   description String
-  imageUrl    String   @map("image_url")
+  imageUrl    String          @map("image_url")
   price       Float
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+  carts       ProductInCart[]
 
   @@map("products")
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user     User            @relation(fields: [userId], references: [id])
+  products ProductInCart[]
+
+  @@map("carts")
+}
+
+model ProductInCart {
+  productId String   @map("product_id")
+  cartId    String   @map("cart_id")
+  quantity  Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  product Product @relation(fields: [productId], references: [id])
+  cart    Cart    @relation(fields: [cartId], references: [id])
+
+  @@id([productId, cartId])
+  @@map("product_in_carts")
 }
