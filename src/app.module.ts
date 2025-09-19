@@ -7,6 +7,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './core/guards/roles.guard';
 import { AuthGuard } from './modules/auth/guards/auth.guard';
 import { AuthModule } from './modules/auth/auth.module';
+import { CqrsModule } from '@nestjs/cqrs';
 
 @Module({
   controllers: [AppController],
@@ -23,6 +24,7 @@ import { AuthModule } from './modules/auth/auth.module';
   imports: [
     AuthModule,
     CoreModule,
+    CqrsModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       validate: validateEnv
