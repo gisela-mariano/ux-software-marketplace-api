@@ -10,7 +10,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly jwtService: JwtService
-    ) {}
+    ) { }
     async execute(command: LoginCommand) {
         const { email, password } = command.data
 
@@ -21,7 +21,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
         })
 
         if (!user) {
-            throw new NotFoundException('Invalid credentials')
+            throw new UnauthorizedException('Invalid credentials')
         }
 
         const isPasswordValid = await compare(password, user.password)
@@ -39,7 +39,12 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
         const accessToken = await this.jwtService.signAsync(payload)
 
         return {
-            user,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            },
             accessToken
         }
     }
