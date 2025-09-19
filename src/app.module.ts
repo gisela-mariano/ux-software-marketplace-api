@@ -5,6 +5,7 @@ import { CoreModule } from './core/core.module';
 import { validateEnv } from './core/infra/config/env';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './core/guards/roles.guard';
+import { AuthGuard } from './modules/auth/guards/auth.guard';
 
 @Module({
   controllers: [AppController],
@@ -12,6 +13,10 @@ import { RolesGuard } from './core/guards/roles.guard';
     {
       provide: APP_GUARD,
       useClass: RolesGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard
     }
   ],
   imports: [
