@@ -21,7 +21,7 @@ model User {
   password  String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  carts     Cart[]
+  cart      Cart?
 
   @@map("users")
 }
@@ -41,7 +41,7 @@ model Product {
 
 model Cart {
   id        String   @id @default(uuid())
-  userId    String   @map("user_id")
+  userId    String   @unique @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
