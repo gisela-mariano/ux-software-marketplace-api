@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
 import { CoreModule } from './core/core.module';
 import { validateEnv } from './core/infra/config/env';
 import { APP_GUARD } from '@nestjs/core';
@@ -11,7 +10,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { ProductModule } from './modules/product/product.module';
 
 @Module({
-  controllers: [AppController],
+  controllers: [],
   providers: [
     {
       provide: APP_GUARD,
