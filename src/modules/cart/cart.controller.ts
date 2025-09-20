@@ -14,7 +14,10 @@ export class CartController {
     @ApiResponse({ status: 201, description: 'Product added to cart successfully' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiBearerAuth()
-    async addProductToCart(@Body() addProductToCartDto: AddProductToCartDto, @Req() req: Request) {
+    async addProductToCart(
+        @Body() addProductToCartDto: AddProductToCartDto, 
+        @Req() req: Request
+    ) {
         return this.commandBus.execute(new AddProductToCartImpl({
             ...addProductToCartDto,
             userId: req.user.sub
