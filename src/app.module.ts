@@ -9,9 +9,10 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ProductModule } from './modules/product/product.module';
 import { CartModule } from './modules/cart/cart.module';
+import { AppController } from './app.controller';
 
 @Module({
-  controllers: [],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
