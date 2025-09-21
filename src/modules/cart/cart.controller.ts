@@ -1,9 +1,11 @@
-import { Body, Controller, Post, Delete, Req } from "@nestjs/common";
+import { Body, Controller, Post, Delete, Patch, Req } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 import { AddProductToCartDto } from "./commands/dto/add-product-to-cart.dto";
 import { RemoveProductFromCartDto } from "./commands/dto/remove-product-from-cart.dto";
+import { DecreaseProductQuantityDto } from "./commands/dto/decrease-product-quantity.dto";
 import { AddProductToCartImpl } from "./commands/impl/add-product-to-cart.impl";
 import { RemoveProductFromCartImpl } from "./commands/impl/remove-product-from-cart.impl";
+import { DecreaseProductQuantityImpl } from "./commands/impl/decrease-product-quantity.impl";
 import { Request } from "express";
 import { ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 
@@ -38,6 +40,22 @@ export class CartController {
     ) {
         return this.commandBus.execute(new RemoveProductFromCartImpl({
             ...removeProductFromCartDto,
+            userId: req.user.sub
+        }));
+    }
+
+    @Patch("decrease-quantity")
+    @ApiOperation({ summary: 'Decrease product quantity in the cart' })
+    @ApiResponse({ status: 200, description: 'Product quantity decreased successfully' })
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    @ApiResponse({ status: 404, description: 'Product not found in cart' })
+    @ApiBearerAuth()
+    async decreaseProductQuantity(
+        @Body() decreaseProductQuantityDto: DecreaseProductQuantityDto,
+        @Req() req: Request
+    ) {
+        return this.commandBus.execute(new DecreaseProductQuantityImpl({
+            ...decreaseProductQuantityDto,
             userId: req.user.sub
         }));
     }
