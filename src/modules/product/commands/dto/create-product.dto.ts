@@ -12,14 +12,10 @@ export class CreateProductDto {
   @IsNotEmpty()
   description: string;
 
-  @ApiProperty({ description: 'Product image URL', example: 'https://example.com/image.jpg' })
-  @IsString()
-  @IsUrl()
-  @IsNotEmpty()
-  imageUrl: string;
+  @ApiProperty({ description:'Product image', type: 'string', format: 'binary' })
+  image: any;
 
   @ApiProperty({ description: 'Product price', example: 999.99 })
-  @IsNumber()
-  @Min(0)
+  @IsNotEmpty()
   price: number;
 }

@@ -6,9 +6,15 @@ import { CreateProductHandler } from "./commands/handlers/create-product.handler
 import { UpdateProductHandler } from "./commands/handlers/update-product.handler";
 import { DeleteProductHandler } from "./commands/handlers/delete-product.handler";
 import { ProductController } from "./product.controller";
+import { MulterModule } from "@nestjs/platform-express";
+import { MulterConfigService } from "src/core/infra/multer/multer-config.service";
 
 @Module({
-  imports: [CqrsModule],
+  imports: [
+    CqrsModule, MulterModule.registerAsync({
+      useClass: MulterConfigService,
+    })
+  ],
   controllers: [ProductController],
   providers: [
     GetProductsHandler,

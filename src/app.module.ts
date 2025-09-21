@@ -10,6 +10,8 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { ProductModule } from './modules/product/product.module';
 import { CartModule } from './modules/cart/cart.module';
 import { AppController } from './app.controller';
+import { MulterModule } from '@nestjs/platform-express';
+import { MulterConfigService } from './core/infra/multer/multer-config.service';
 
 @Module({
   controllers: [AppController],
