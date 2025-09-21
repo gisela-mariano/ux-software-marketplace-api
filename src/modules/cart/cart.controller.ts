@@ -1,7 +1,9 @@
-import { Body, Controller, Post, Req } from "@nestjs/common";
+import { Body, Controller, Post, Delete, Req } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 import { AddProductToCartDto } from "./commands/dto/add-product-to-cart.dto";
+import { RemoveProductFromCartDto } from "./commands/dto/remove-product-from-cart.dto";
 import { AddProductToCartImpl } from "./commands/impl/add-product-to-cart.impl";
+import { RemoveProductFromCartImpl } from "./commands/impl/remove-product-from-cart.impl";
 import { Request } from "express";
 import { ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 
@@ -20,6 +22,22 @@ export class CartController {
     ) {
         return this.commandBus.execute(new AddProductToCartImpl({
             ...addProductToCartDto,
+            userId: req.user.sub
+        }));
+    }
+
+    @Delete("remove-product")
+    @ApiOperation({ summary: 'Remove a product from the cart' })
+    @ApiResponse({ status: 200, description: 'Product removed from cart successfully' })
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    @ApiResponse({ status: 404, description: 'Product not found in cart' })
+    @ApiBearerAuth()
+    async removeProductFromCart(
+        @Body() removeProductFromCartDto: RemoveProductFromCartDto,
+        @Req() req: Request
+    ) {
+        return this.commandBus.execute(new RemoveProductFromCartImpl({
+            ...removeProductFromCartDto,
             userId: req.user.sub
         }));
     }
