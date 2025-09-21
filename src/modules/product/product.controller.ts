@@ -90,6 +90,8 @@ export class ProductController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update a product (Admin only)' })
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiConsumes('multipart/form-data')
   @ApiResponse({ status: 200, description: 'Product updated successfully' })
   @ApiResponse({ status: 404, description: 'Product not found' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -98,11 +100,14 @@ export class ProductController {
   @Roles(['ADMIN'])
   async updateProduct(
     @Param('id') id: string,
+    @UploadedFile() image: Express.Multer.File,
     @Body() updateProductDto: Omit<UpdateProductDto, 'id'>
   ) {
     return this.commandBus.execute(new UpdateProductCommand({
       id,
-      ...updateProductDto
+      ...updateProductDto,
+      price: Number(updateProductDto.price),
+      imageUrl: image?.filename
     }));
   }
 

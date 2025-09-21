@@ -10,7 +10,6 @@ export class UpdateProductHandler implements ICommandHandler<UpdateProductComman
     async execute(command: UpdateProductCommand) {
         const { id, ...updateData } = command.data;
 
-        // Remove undefined values
         const filteredData = Object.fromEntries(
             Object.entries(updateData).filter(([_, value]) => value !== undefined)
         );
