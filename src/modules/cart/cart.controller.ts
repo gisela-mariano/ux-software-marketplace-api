@@ -1,17 +1,31 @@
-import { Body, Controller, Post, Delete, Patch, Req } from "@nestjs/common";
-import { CommandBus } from "@nestjs/cqrs";
+import { Body, Controller, Post, Delete, Patch, Get, Req } from "@nestjs/common";
+import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { AddProductToCartDto } from "./commands/dto/add-product-to-cart.dto";
 import { RemoveProductFromCartDto } from "./commands/dto/remove-product-from-cart.dto";
 import { DecreaseProductQuantityDto } from "./commands/dto/decrease-product-quantity.dto";
 import { AddProductToCartImpl } from "./commands/impl/add-product-to-cart.impl";
 import { RemoveProductFromCartImpl } from "./commands/impl/remove-product-from-cart.impl";
 import { DecreaseProductQuantityImpl } from "./commands/impl/decrease-product-quantity.impl";
+import { GetCartQuery } from "./queries/get-cart.query";
 import { Request } from "express";
 import { ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller("cart")
 export class CartController {
-    constructor(private readonly commandBus: CommandBus) {}
+    constructor(
+        private readonly commandBus: CommandBus,
+        private readonly queryBus: QueryBus
+    ) {}
+
+    @Get()
+    @ApiOperation({ summary: 'Get user cart with all products and total price' })
+    @ApiResponse({ status: 200, description: 'Cart retrieved successfully' })
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    @ApiResponse({ status: 404, description: 'Cart not found' })
+    @ApiBearerAuth()
+    async getCart(@Req() req: Request) {
+        return this.queryBus.execute(new GetCartQuery(req.user.sub));
+    }
 
     @Post("add-product")
     @ApiOperation({ summary: 'Add a product to the cart' })
