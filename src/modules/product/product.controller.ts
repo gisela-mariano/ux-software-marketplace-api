@@ -7,7 +7,7 @@ import { CreateProductCommand } from "./commands/impl/create-product.command";
 import { UpdateProductCommand } from "./commands/impl/update-product.command";
 import { DeleteProductCommand } from "./commands/impl/delete-product.command";
 import { CreateProductDto } from "./commands/dto/create-product.dto";
-import { UpdateProductDto } from "./commands/dto/update-product.dto";
+import { UpdateProductDto, UpdateProductDtoWithoutId } from "./commands/dto/update-product.dto";
 import { ApiOperation, ApiResponse, ApiTags, ApiBearerAuth, ApiConsumes, ApiBody } from "@nestjs/swagger";
 import { Public } from "../auth/decorators/public.decorator";
 import { Roles } from "../../core/decorators/roles.decorator";
@@ -92,7 +92,13 @@ export class ProductController {
   @ApiOperation({ summary: 'Update a product (Admin only)' })
   @UseInterceptors(FileInterceptor('image'))
   @ApiConsumes('multipart/form-data')
-  @ApiResponse({ status: 200, description: 'Product updated successfully' })
+  @ApiResponse({ status: 200, example: {
+    id: '1',
+    name: 'iPhone 15',
+    description: 'Latest iPhone with advanced features',
+    imageUrl: 'http://localhost:3000/uploads/image.jpg',
+    price: 999.99
+  } })
   @ApiResponse({ status: 404, description: 'Product not found' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
@@ -100,20 +106,30 @@ export class ProductController {
   @Roles(['ADMIN'])
   async updateProduct(
     @Param('id') id: string,
+    @Body() updateProductDto: UpdateProductDtoWithoutId,
     @UploadedFile() image: Express.Multer.File,
-    @Body() updateProductDto: Omit<UpdateProductDto, 'id'>
   ) {
     return this.commandBus.execute(new UpdateProductCommand({
       id,
-      ...updateProductDto,
-      price: Number(updateProductDto.price),
-      imageUrl: image?.filename
+      price: updateProductDto.price ? Number(updateProductDto.price) : undefined,
+      imageUrl: image ? image.filename : undefined,
+      description: updateProductDto.description ? updateProductDto.description : undefined,
+      name: updateProductDto.name ? updateProductDto.name : undefined
     }));
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a product (Admin only)' })
-  @ApiResponse({ status: 200, description: 'Product deleted successfully' })
+  @ApiResponse({ status: 200, example: {
+    message: 'Product deleted successfully',
+    product: {
+      id: '1',
+      name: 'iPhone 15',
+      description: 'Latest iPhone with advanced features',
+      imageUrl: 'http://localhost:3000/uploads/image.jpg',
+      price: 999.99
+    }
+  } })
   @ApiResponse({ status: 404, description: 'Product not found' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })

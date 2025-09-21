@@ -1,5 +1,5 @@
 import { IsString, IsNumber, IsOptional, IsUrl, Min, IsUUID } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 
 export class UpdateProductDto {
   @ApiProperty({ description: 'Product ID', example: 'uuid-string' })
@@ -16,15 +16,12 @@ export class UpdateProductDto {
   @IsOptional()
   description?: string;
 
-  @ApiProperty({ description: 'Product image URL', example: 'https://example.com/image.jpg', required: false })
-  @IsString()
-  @IsUrl()
-  @IsOptional()
-  imageUrl?: string;
+  @ApiProperty({ description:'Product image', type: 'string', format: 'binary', required: false })
+  image: any;
 
   @ApiProperty({ description: 'Product price', example: 1199.99, required: false })
-  @IsNumber()
-  @Min(0)
   @IsOptional()
   price?: number;
 }
+
+export class UpdateProductDtoWithoutId extends OmitType(UpdateProductDto, ['id'] as const) {}
