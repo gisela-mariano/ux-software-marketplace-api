@@ -1,7 +1,8 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { AddProductToCartImpl } from "../impl/add-product-to-cart.impl";
 import { PrismaService } from "src/core/infra/database/prisma.service";
-import { NotFoundException } from "@nestjs/common";
+import { BadRequestException, NotFoundException } from "@nestjs/common";
+import console from "console";
 
 @CommandHandler(AddProductToCartImpl)
 export class AddProductToCartHandler implements ICommandHandler<AddProductToCartImpl> {
@@ -13,19 +14,60 @@ export class AddProductToCartHandler implements ICommandHandler<AddProductToCart
         const cart = await this.prismaService.cart.findUnique({
             where: {
                 userId
+            },
+            include: {
+                products: {
+                    select: {
+                        product: true
+                    }
+                }
             }
         });
-        
+
         if (!cart) {
             throw new NotFoundException('Cart not found');
         }
 
-        await this.prismaService.productInCart.create({
-            data: {
-                productId, quantity, cartId: cart.id
+        const productInCart = await this.prismaService.productInCart.findFirst({
+            where: {
+                productId,
+                cartId: cart.id
             }
         });
+        
+        let updatedProductInCart;
 
-        return { message: 'Product added to cart successfully' };
+        if (productInCart) {
+            updatedProductInCart = await this.prismaService.productInCart.update({
+                where: {
+                    productId_cartId: {
+                        productId,
+                        cartId: cart.id
+                    }
+                },
+                data: {
+                    quantity: productInCart.quantity + quantity
+                },
+                include: {
+                    product: true
+                }
+            });
+        } else {
+            updatedProductInCart = await this.prismaService.productInCart.create({
+                data: {
+                    productId,
+                    cartId: cart.id,
+                    quantity
+                },
+                include: {
+                    product: true
+                }
+            });
+        }
+
+        return {
+            product: updatedProductInCart.product,
+            quantity: updatedProductInCart.quantity
+        };
     }
 }
