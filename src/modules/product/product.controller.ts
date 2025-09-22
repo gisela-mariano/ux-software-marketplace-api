@@ -7,13 +7,11 @@ import { CreateProductCommand } from "./commands/impl/create-product.command";
 import { UpdateProductCommand } from "./commands/impl/update-product.command";
 import { DeleteProductCommand } from "./commands/impl/delete-product.command";
 import { CreateProductDto } from "./commands/dto/create-product.dto";
-import { UpdateProductDto, UpdateProductDtoWithoutId } from "./commands/dto/update-product.dto";
+import { UpdateProductDtoWithoutId } from "./commands/dto/update-product.dto";
 import { ApiOperation, ApiResponse, ApiTags, ApiBearerAuth, ApiConsumes, ApiBody } from "@nestjs/swagger";
 import { Public } from "../auth/decorators/public.decorator";
 import { Roles } from "../../core/decorators/roles.decorator";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { string } from "zod";
-import { id } from "zod/v4/locales";
 
 @ApiTags('Products')
 @Controller('products')
@@ -43,7 +41,13 @@ export class ProductController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get product by ID' })
-  @ApiResponse({ status: 200, description: 'Product found' })
+  @ApiResponse({ status: 200, example: {
+    id: '1',
+    name: 'iPhone 15',
+    description: 'Latest iPhone with advanced features',
+    imageUrl: `${process.env.BASE_URL}/image.jpg`,
+    price: 999.99
+  } })
   @ApiResponse({ status: 404, description: 'Product not found' })
   @Public()
   async getProductById(@Param('id') id: string) {
@@ -59,7 +63,7 @@ export class ProductController {
       id: '1',
       name: 'iPhone 15',
       description: 'Latest iPhone with advanced features',
-      imageUrl: 'http://localhost:3000/uploads/image.jpg',
+      imageUrl: `${process.env.BASE_URL}/image.jpg`,
       price: 999.99
     }
   })
@@ -96,7 +100,7 @@ export class ProductController {
     id: '1',
     name: 'iPhone 15',
     description: 'Latest iPhone with advanced features',
-    imageUrl: 'http://localhost:3000/uploads/image.jpg',
+    imageUrl: `${process.env.BASE_URL}/image.jpg`,
     price: 999.99
   } })
   @ApiResponse({ status: 404, description: 'Product not found' })
@@ -126,7 +130,7 @@ export class ProductController {
       id: '1',
       name: 'iPhone 15',
       description: 'Latest iPhone with advanced features',
-      imageUrl: 'http://localhost:3000/uploads/image.jpg',
+      imageUrl: `${process.env.BASE_URL}/image.jpg`,
       price: 999.99
     }
   } })

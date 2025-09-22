@@ -7,10 +7,12 @@ export class AppController {
   @Get()
   @Public()
   @ApiOperation({ summary: 'Get server status' })
-  @ApiResponse({ status: 200, description: 'Server is running' })
+  @ApiResponse({ status: 200, example: {
+    message: 'Server is running'
+  } })
   getHello() {
     return {
-        message: 'Server is running'
+      message: 'Server is running'
     };
   }
 }

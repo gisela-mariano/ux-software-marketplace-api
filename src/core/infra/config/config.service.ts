@@ -21,4 +21,8 @@ export class AppConfigService {
   get jwtSecret(): string {
     return this.config.get('JWT_SECRET', { infer: true });
   }
+
+  get baseUrl(): string {
+    return this.config.get('BASE_URL', { infer: true });
+  }
 }
