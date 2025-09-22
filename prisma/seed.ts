@@ -8,6 +8,8 @@ async function main() {
       name: 'John Doe',
       email: 'john@doe.com',
       password: await hash('123456', 10),
+      phone: '1234567890',
+      cpf: '1234567890',
       role: Role.ADMIN
     }
   })

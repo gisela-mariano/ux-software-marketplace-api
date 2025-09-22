@@ -13,11 +13,11 @@ export class RegisterHandler implements ICommandHandler<RegisterCommand> {
         private readonly jwtService: JwtService
     ) { }
     async execute(command: RegisterCommand) {
-        const { name, email, password } = command.data
+        const { name, email, password, phone, cpf } = command.data
 
         const user = await this.prismaService.user.findUnique({
             where: {
-                email
+                email,
             }
         });
 
@@ -27,12 +27,24 @@ export class RegisterHandler implements ICommandHandler<RegisterCommand> {
 
         const hashedPassword = await hash(password, 10);
 
+        const userWithCpf = await this.prismaService.user.findUnique({
+            where: {
+                cpf
+            }
+        });
+
+        if (userWithCpf) {
+            throw new ConflictException('User with cpf already exists')
+        }
+
         const userCreated = await this.prismaService.user.create({
             data: {
                 name,
                 email,
                 password: hashedPassword,
-                role: Role.USER
+                role: Role.USER,
+                phone,
+                cpf
             }
         });
 
@@ -55,6 +67,8 @@ export class RegisterHandler implements ICommandHandler<RegisterCommand> {
                 id: userCreated.id,
                 name: userCreated.name,
                 email: userCreated.email,
+                phone: userCreated.phone,
+                cpf: userCreated.cpf,
                 role: userCreated.role
             }, accessToken
         }

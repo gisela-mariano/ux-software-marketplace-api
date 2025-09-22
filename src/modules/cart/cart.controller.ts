@@ -15,7 +15,7 @@ export class CartController {
     constructor(
         private readonly commandBus: CommandBus,
         private readonly queryBus: QueryBus
-    ) {}
+    ) { }
 
     @Get()
     @ApiOperation({ summary: 'Get user cart with all products and total price' })
@@ -33,7 +33,7 @@ export class CartController {
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiBearerAuth()
     async addProductToCart(
-        @Body() addProductToCartDto: AddProductToCartDto, 
+        @Body() addProductToCartDto: AddProductToCartDto,
         @Req() req: Request
     ) {
         return this.commandBus.execute(new AddProductToCartImpl({

@@ -9,10 +9,10 @@ import { GetCartHandler } from "./queries/handlers/get-cart.handler";
   imports: [],
   controllers: [CartController],
   providers: [
-    AddProductToCartHandler, 
-    RemoveProductFromCartHandler, 
+    AddProductToCartHandler,
+    RemoveProductFromCartHandler,
     DecreaseProductQuantityHandler,
     GetCartHandler
   ]
 })
-export class CartModule {}
+export class CartModule { }
