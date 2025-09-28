@@ -1,9 +1,9 @@
-import { Module } from "@nestjs/common";
-import { JwtModule } from "@nestjs/jwt";
-import { AppConfigService } from "../../core/infra/config/config.service";
-import { AuthController } from "./auth.controller";
-import { LoginHandler } from "./commands/handler/login.handler";
-import { RegisterHandler } from "./commands/handler/register.handler";
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { AppConfigService } from '../../core/infra/config/config.service';
+import { AuthController } from './auth.controller';
+import { LoginHandler } from './commands/handler/login.handler';
+import { RegisterHandler } from './commands/handler/register.handler';
 
 @Module({
   imports: [
@@ -11,12 +11,13 @@ import { RegisterHandler } from "./commands/handler/register.handler";
       global: true,
       useFactory: (configService: AppConfigService) => ({
         secret: configService.jwtSecret,
-        signOptions: { expiresIn: '1h' }
+        // signOptions: { expiresIn: '1h' }
+        signOptions: { expiresIn: configService.jwtExpiresIn },
       }),
-      inject: [AppConfigService]
-    })
+      inject: [AppConfigService],
+    }),
   ],
   controllers: [AuthController],
-  providers: [LoginHandler, RegisterHandler]
+  providers: [LoginHandler, RegisterHandler],
 })
 export class AuthModule {}

@@ -22,6 +22,10 @@ export class AppConfigService {
     return this.config.get('JWT_SECRET', { infer: true });
   }
 
+  get jwtExpiresIn(): string {
+    return this.config.get('JWT_EXPIRES_IN', { infer: true });
+  }
+
   get baseUrl(): string {
     return this.config.get('BASE_URL', { infer: true });
   }
