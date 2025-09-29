@@ -61,6 +61,7 @@ docker-compose up -d
 ```
 
 Este comando irá:
+
 - Criar um container PostgreSQL na porta 5432
 - Configurar o banco de dados `marketplace_db`
 - Criar um usuário `postgres` com senha `docker`
@@ -73,9 +74,18 @@ npx prisma migrate dev
 
 ### 6. (Opcional) Execute o seed para dados iniciais
 
+Esse comando irá gerar o usuário administrador:
+
+- email: john@doe.com
+- senha: 123456
+
 ```bash
 npx prisma db seed
 ```
+
+- ### Informações importantes:
+
+  Apenas administradores (role ADMIN) podem criar produtos e não há uma rota que permita a alteração da role, então ela tem que ser modificada manualmente no banco de dados.
 
 ## 🚀 Como Executar o Projeto
 
@@ -120,6 +130,7 @@ npx prisma migrate deploy
 ### Estrutura do Banco
 
 O projeto utiliza as seguintes tabelas principais:
+
 - **users** - Usuários do sistema (ADMIN/USER)
 - **products** - Produtos do marketplace
 - **carts** - Carrinhos de compra dos usuários
@@ -140,6 +151,7 @@ http://localhost:3000/api/v1/docs
 ```bash
 docker-compose down
 ```
+
 ### Porta já em uso
 
 Se a porta 3000 estiver em uso, altere a variável `PORT` no arquivo `.env` ou pare o processo que está usando a porta.

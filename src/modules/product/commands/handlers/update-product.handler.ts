@@ -1,31 +1,33 @@
-import { ICommandHandler, CommandHandler } from "@nestjs/cqrs";
-import { UpdateProductCommand } from "../impl/update-product.command";
-import { PrismaService } from "src/core/infra/database/prisma.service";
-import { NotFoundException } from "@nestjs/common";
+import { NotFoundException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { PrismaService } from 'src/core/infra/database/prisma.service';
+import { UpdateProductCommand } from '../impl/update-product.command';
 
 @CommandHandler(UpdateProductCommand)
-export class UpdateProductHandler implements ICommandHandler<UpdateProductCommand> {
-    constructor(private readonly prismaService: PrismaService) {}
+export class UpdateProductHandler
+  implements ICommandHandler<UpdateProductCommand>
+{
+  constructor(private readonly prismaService: PrismaService) {}
 
-    async execute(command: UpdateProductCommand) {
-        const { id, ...updateData } = command.data;
+  async execute(command: UpdateProductCommand) {
+    const { id, ...updateData } = command.data;
 
-        const filteredData = Object.fromEntries(
-            Object.entries(updateData).filter(([_, value]) => value !== undefined)
-        );
+    const filteredData = Object.fromEntries(
+      Object.entries(updateData).filter(([_, value]) => value !== undefined),
+    );
 
-        const product = await this.prismaService.product.update({
-            where: { id },
-            data: {
-                ...filteredData,
-                imageUrl: updateData.imageUrl ? updateData.imageUrl : undefined
-            }
-        });
+    const product = await this.prismaService.product.update({
+      where: { id },
+      data: {
+        ...filteredData,
+        imageUrl: updateData.imageUrl ? updateData.imageUrl : undefined,
+      },
+    });
 
-        if (!product) {
-            throw new NotFoundException(`Product with ID ${id} not found`);
-        }
-
-        return product;
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
     }
+
+    return product;
+  }
 }

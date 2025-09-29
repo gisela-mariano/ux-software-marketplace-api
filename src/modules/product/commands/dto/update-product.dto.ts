@@ -1,27 +1,56 @@
-import { IsString, IsNumber, IsOptional, IsUrl, Min, IsUUID } from 'class-validator';
 import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class UpdateProductDto {
   @ApiProperty({ description: 'Product ID', example: 'uuid-string' })
   @IsUUID()
   id: string;
 
-  @ApiProperty({ description: 'Product name', example: 'iPhone 15 Pro', required: false })
+  @ApiProperty({
+    description: 'Product name',
+    example: 'iPhone 15 Pro',
+    required: false,
+  })
   @IsString()
   @IsOptional()
   name?: string;
 
-  @ApiProperty({ description: 'Product description', example: 'Latest iPhone Pro with advanced features', required: false })
+  @ApiProperty({
+    description: 'Product description',
+    example: 'Latest iPhone Pro with advanced features',
+    required: false,
+  })
   @IsString()
   @IsOptional()
   description?: string;
 
-  @ApiProperty({ description:'Product image', type: 'string', format: 'binary', required: false })
+  @ApiProperty({
+    description: 'Product image',
+    type: 'string',
+    format: 'binary',
+    required: false,
+  })
   image: any;
 
-  @ApiProperty({ description: 'Product price', example: 1199.99, required: false })
+  @ApiProperty({
+    description: 'Product price',
+    example: 1199.99,
+    required: false,
+  })
   @IsOptional()
   price?: number;
 }
 
-export class UpdateProductDtoWithoutId extends OmitType(UpdateProductDto, ['id'] as const) {}
+export class UpdateProductDtoWithoutId extends OmitType(UpdateProductDto, [
+  'id',
+] as const) {}
+
+export class UpdateProductDtoWithoutIdWithImageUrl extends OmitType(
+  UpdateProductDto,
+  ['id', 'image'] as const,
+) {
+  @ApiProperty({ description: 'Product image url', type: 'string' })
+  @IsString()
+  @IsNotEmpty()
+  imageUrl: string;
+}

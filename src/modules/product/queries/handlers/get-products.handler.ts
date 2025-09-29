@@ -46,7 +46,9 @@ export class GetProductsHandler implements IQueryHandler<GetProductsQuery> {
       total,
       products: products.map((product) => ({
         ...product,
-        imageUrl: this.fileService.getFileUrl(product.imageUrl),
+        imageUrl: product.imageUrl.includes('http')
+          ? product.imageUrl
+          : this.fileService.getFileUrl(product.imageUrl),
       })),
     };
   }

@@ -39,7 +39,9 @@ export class GetCartHandler implements IQueryHandler<GetCartQuery> {
       return {
         product: {
           ...item.product,
-          imageUrl: this.fileService.getFileUrl(item.product.imageUrl),
+          imageUrl: item.product.imageUrl.includes('http')
+            ? item.product.imageUrl
+            : this.fileService.getFileUrl(item.product.imageUrl),
         },
         quantity: item.quantity,
         itemTotal: itemTotal,
